@@ -33,15 +33,15 @@ def main():
             break
 
         timestamp_ms = int((time.time() - start_time) * 1000)
-        landmarks = tracker.process(frame, timestamp_ms)
-        gesture.update(landmarks)
+        hands = tracker.process(frame, timestamp_ms)
+        gesture.update(hands)
 
-        if gesture.is_pinching and gesture.current_note:
+        if gesture.current_note:
             audio.play(gesture.current_note["name"])
         else:
             audio.stop()
 
-        display = ui.draw(frame, landmarks, gesture.current_note,
+        display = ui.draw(frame, hands, gesture.current_note,
                           gesture.is_pinching, instrument,
                           finger_count=gesture.finger_count)
         cv2.imshow("Air Music", display)

@@ -6,18 +6,20 @@ import note_manager
 
 
 class UIRenderer:
-    def draw(self, frame, landmarks, current_note, is_pinching, instrument,
+    def draw(self, frame, hands, current_note, is_pinching, instrument,
              finger_count=0):
         """Draw all UI elements on the frame. Returns the modified frame."""
         h, w = frame.shape[:2]
-        # Mirror the frame for natural interaction
         frame = cv2.flip(frame, 1)
 
         self._draw_header(frame, w, instrument)
         self._draw_note_strip(frame, w, h, current_note, is_pinching, finger_count)
         self._draw_status(frame, w, h, current_note, is_pinching, instrument, finger_count)
-        if landmarks:
-            self._draw_hand(frame, landmarks, w, h, is_pinching)
+        if hands:
+            for hand in hands:
+                landmarks = hand.get("landmarks") if isinstance(hand, dict) else hand
+                if landmarks:
+                    self._draw_hand(frame, landmarks, w, h, is_pinching)
         return frame
 
     def _draw_header(self, frame, w, instrument):
